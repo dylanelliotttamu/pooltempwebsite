@@ -7,8 +7,3 @@
 # Notes https://news.ycombinator.com/item?id=34056812
 
 
-
-
-# It would also be fun to make an linear regression ML model just do the calculations instead of the averaging. 
-# What training data though?
-# my book probably has the answer
