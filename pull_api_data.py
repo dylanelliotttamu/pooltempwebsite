@@ -37,35 +37,8 @@ def request_data(url):
             data = json.loads(response.read().decode())
             return data 
             # returns 7-days of hourly data
-    except:
-        print('Error requesting data from NWS api')
-
-    
-# def parse_weather_data(data):
-#     try:
-#         # Access various elements within the JSON structure
-#         context = data["@context"]
-#         geometry_type = data["geometry"]["type"]
-#         coordinates = data["geometry"]["coordinates"]
-#         units = data["properties"]["units"]
-#         forecast_generator = data["properties"]["forecastGenerator"]
-#         generated_at = data["properties"]["generatedAt"]
-#         update_time = data["properties"]["updateTime"]
-#         valid_times = data["properties"]["validTimes"]
-#         elevation = data["properties"]["elevation"]["value"]
-
-#         # Access periods
-#         periods = data["properties"]["periods"]
-
-#         # Example of printing the temperature and short forecast for each period
-#         for period in periods:
-#             start_time = period["startTime"]
-#             end_time = period["endTime"]
-#             temperature = period["temperature"]
-#             short_forecast = period["shortForecast"]
-#             print(f"From {start_time} to {end_time}, the temperature is {temperature}°{period['temperatureUnit']} with a forecast of {short_forecast}.")
-#     except:
-#         print('Error parsing data')
+    except Exception as e:
+        print(f"Error requesting data: {e}")
 
 
 def parse_weather_data(data):
@@ -105,4 +78,19 @@ def parse_weather_data(data):
 pull_api_temp_data_main(lat, lon, timestep_in_hours=1)
 
 
-# parse_weather_data(data)
+# now i should have objects that I can have the lambda handler use to display the data
+
+# create a text file to store the data for the html page to use
+# with open('data.txt', 'w') as f:
+#     f.write(data)
+
+
+
+water_temp_1_day_ago = 80
+water_temp_2_days_ago = 78
+
+
+today_water_temperature = (water_temp_1_day_ago + water_temp_2_days_ago ) / 2
+
+
+
