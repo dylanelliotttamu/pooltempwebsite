@@ -1,8 +1,16 @@
-# lambda handler for Waco Wave Pool Temperature Forecast
+# lambda handler file for Waco Wave Pool Temperature Forecast
+
+
+# Read in the data from the text file
+with open('data.txt', 'r') as file:
+    data = file.read()
+
+print(data)
+
 
 def lambda_handler(event, context):
     
-    body = '''
+    body = f'''
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -25,7 +33,7 @@ def lambda_handler(event, context):
             <li>Thursday: 79°F, sunny</li>
             <li>Friday: 81°F, partly cloudy</li>
             <li>Saturday: 83°F, sunny</li>
-            <li>Sunday: 80°F, sunny</li>
+            <li>Sunday: {data}°F, sunny</li>
         </ul>
         
         <img src="https://example.com/waco-wave-pool.jpg" alt="Waco Wave Pool" width="500" />
