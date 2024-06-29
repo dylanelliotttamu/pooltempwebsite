@@ -95,7 +95,9 @@ def parse_weather_data(data):
         # store the average temperature and humidity I calculated for each day
         global average_temp_list
         global average_humidity_list
+        global date_list
 
+        date_list = []
         average_temp_list = []
         average_humidity_list = []
 
@@ -104,6 +106,8 @@ def parse_weather_data(data):
             avg_temperature = sum(data["temperatures"]) / len(data["temperatures"])
             avg_humidity = sum(data["humidities"]) / len(data["humidities"])
             print(f"Date: {date}, Average Temperature: {avg_temperature:.2f}°F")
+            # save the date also to a list
+            date_list.append(date)
             average_temp_list.append(avg_temperature)
             average_humidity_list.append(avg_humidity)
         # Round to 2 decimal places
@@ -111,6 +115,7 @@ def parse_weather_data(data):
         average_humidity_list_rounded = [round(i,2) for i in average_humidity_list]
         # print('average humidity list rounded ', average_humidity_list_rounded)
         print('average temp list rounded ', average_temp_list_rounded)
+        print('date list ', date_list)
 
     except Exception as e:
         print(f"Error parsing data: {e}")
@@ -118,53 +123,18 @@ def parse_weather_data(data):
 # Call the main function
 pull_api_temp_data_main(lat, lon, timestep_in_hours=1)
 
-# Assign each day's average temperature and humidity
-today = date.today()
-todays_date = today
+print('len average_temp_list ',len(average_temp_list))
+print('len date_list',len(date_list))
 
-advance_1_day_date = today + timedelta(days=1)
-advance_2_days_date = today + timedelta(days=2)
-advance_3_days_date = today + timedelta(days=3)
-advance_4_days_date = today + timedelta(days=4)
-advance_5_days_date = today + timedelta(days=5)
-advance_6_days_date = today + timedelta(days=6)
-advance_7_days_date = today + timedelta(days=7)
+# Now I have average air temp list and date list
+# Now I need to calculate the average water temperature for each day
+# I use average air temp past 2 days to calculate the average water temperature for today
 
+#retrieve the water temperature for the past 2 days
 
-
-
-
-
-
-
-
-
-
-
-
-# Accessing a single temperature for a specific day
-# specific_date = datetime.strptime("2024-06-28", "%Y-%m-%d").date()
-specific_date = date.today()
-
-if specific_date in daily_data:
-    specific_temperatures = daily_data[specific_date]["temperatures"]
-    print(f"Temperatures on {specific_date}: {specific_temperatures}")
-    # print('length of specific temperatures: ',len(specific_temperatures)) # = 24
-
-else:
-    print(f"No data available for {specific_date}")
-
-# Calculate the average temperature for each day in the data
-
-water_temp_1_day_ago = 80
-water_temp_2_days_ago = 78
-
-today_water_temperature = (water_temp_1_day_ago + water_temp_2_days_ago ) / 2
-
-# now write the data to a text file
-with open('data.txt', 'w') as file:
-    file.write(f"Today's water temperature is: {today_water_temperature}°F")
-
-
-
+# READ FILE past_two_days_water_temp.txt
+with open('past_two_days_water_temp.txt', 'r') as file:
+    past_two_days_water_temp = file.read()
+    print('past two days water temp ', past_two_days_water_temp)
+    
 
