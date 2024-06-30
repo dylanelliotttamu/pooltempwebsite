@@ -120,6 +120,19 @@ def parse_weather_data(data):
     except Exception as e:
         print(f"Error parsing data: {e}")
 
+# read in the past_two_days_water_temp_file
+with open('past_two_days_water_temp.txt', 'r') as file:
+    past_two_days_water_temp = file.read()
+    print('past two days water temp ', past_two_days_water_temp)
+
+# Before, check if first date in forecasted_pool_temp.txt is 2 days ahead, 
+if first_date_in_forecasted_pool_temp_file > one_day_ago_date_in_past_two_days_water_temp_file:
+    
+    # Move the 1 day ago date and associated temp in past_two_days_water_temp_file to 2day ago date and associated data in past_two_days_water_temp_file
+
+    
+
+
 # Call the main function
 pull_api_temp_data_main(lat, lon, timestep_in_hours=1)
 
@@ -136,5 +149,5 @@ print('len date_list',len(date_list))
 with open('past_two_days_water_temp.txt', 'r') as file:
     past_two_days_water_temp = file.read()
     print('past two days water temp ', past_two_days_water_temp)
-    
+
 
