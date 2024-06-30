@@ -120,34 +120,79 @@ def parse_weather_data(data):
     except Exception as e:
         print(f"Error parsing data: {e}")
 
-# read in the past_two_days_water_temp_file
-with open('past_two_days_water_temp.txt', 'r') as file:
-    past_two_days_water_temp = file.read()
-    print('past two days water temp ', past_two_days_water_temp)
 
-# Before, check if first date in forecasted_pool_temp.txt is 2 days ahead, 
-if first_date_in_forecasted_pool_temp_file > one_day_ago_date_in_past_two_days_water_temp_file:
+'''
+
+Being main part of script and call functions
+
+'''
+
+# Read the file
+with open('past_two_days_air_temp.txt', 'r') as file:
+    lines = file.readlines()
+    # print('lines ',lines)
+
+# Parse the data
+two_days_ago_date_in_past_two_days_air_temp_file, two_days_ago_air_temp_in_past_two_days_air_temp_file = lines[0].strip().split(',')
+one_day_ago_date_in_past_two_days_air_temp_file, one_day_ago_air_temp_in_past_two_days_air_temp_file = lines[1].strip().split(',')
+
+print('Two days ago:')
+print(f"Date: {two_days_ago_date_in_past_two_days_air_temp_file}, Air Temp: {two_days_ago_air_temp_in_past_two_days_air_temp_file}")
+
+print('One day ago:')
+print(f"Date: {one_day_ago_date_in_past_two_days_air_temp_file}, Air Temp: {one_day_ago_air_temp_in_past_two_days_air_temp_file}")
+
+
+
+
+
+
+# # read in the past_two_days_air_temp_file
+# with open('past_two_days_air_temp.txt', 'r') as file:
+#     past_two_days_air_temp = file.read()
+#     print('past two days air temp read file = ', past_two_days_air_temp)
+
+# # the way I wrote it, the first entry should be "two days ago" date and have the air temp from "two days ago"
+
+# # set the first date and air temp from the past_two_days_air_temp file
+# two_days_ago_date_in_past_two_days_air_temp_file = past_two_days_air_temp.split(',')[0]
+# two_days_ago_air_temp_in_past_two_days_air_temp_file = past_two_days_air_temp.split(',')[1]
+# one_day_ago_date_in_past_two_days_air_temp_file = past_two_days_air_temp.split(',')[2]
+
+# print('one_dayago date', one_day_ago_date_in_past_two_days_air_temp_file)
+
+
+# one_day_ago_air_temp_in_past_two_days_air_temp_file = past_two_days_air_temp.split(',')[3]
+
+
+
+# print('first date in forecasted pool temp file ', two_days_ago_date_in_past_two_days_air_temp_file)
+# print('first date air temp in forecasted pool temp file ', two_days_ago_air_temp_in_past_two_days_air_temp_file)
+
+
+# print('one day ago air temp in past two days air temp file ', one_day_ago_air_temp_in_past_two_days_air_temp_file)
+
+
+
+
     
-    # Move the 1 day ago date and associated temp in past_two_days_water_temp_file to 2day ago date and associated data in past_two_days_water_temp_file
-
-    
 
 
-# Call the main function
-pull_api_temp_data_main(lat, lon, timestep_in_hours=1)
+# # # Call the main function
+# # pull_api_temp_data_main(lat, lon, timestep_in_hours=1)
 
-print('len average_temp_list ',len(average_temp_list))
-print('len date_list',len(date_list))
+# # print('len average_temp_list ',len(average_temp_list))
+# # print('len date_list',len(date_list))
 
-# Now I have average air temp list and date list
-# Now I need to calculate the average water temperature for each day
-# I use average air temp past 2 days to calculate the average water temperature for today
+# # # Now I have average air temp list and date list
+# # # Now I need to calculate the average water temperature for each day
+# # # I use average air temp past 2 days to calculate the average water temperature for today
 
-#retrieve the water temperature for the past 2 days
+# # #retrieve the water temperature for the past 2 days
 
-# READ FILE past_two_days_water_temp.txt
-with open('past_two_days_water_temp.txt', 'r') as file:
-    past_two_days_water_temp = file.read()
-    print('past two days water temp ', past_two_days_water_temp)
+# # # READ FILE past_two_days_water_temp.txt
+# # with open('past_two_days_water_temp.txt', 'r') as file:
+# #     past_two_days_water_temp = file.read()
+# #     print('past two days water temp ', past_two_days_water_temp)
 
 
