@@ -123,9 +123,15 @@ def parse_weather_data(data):
 
 '''
 
-Being main part of script and call functions
+Begin main part of script and call functions
 
 '''
+# Process:
+# If new day: 
+# Read in past2days air temp file and replace date and associated temp of 1day ago to 2 day ago
+# Read in forecasted air temp file and take the 1st entry and replace with 1 day ago
+# Then run the rest of the script
+
 
 # Read the file
 with open('past_two_days_air_temp.txt', 'r') as file:
@@ -141,6 +147,11 @@ print(f"Date: {two_days_ago_date_in_past_two_days_air_temp_file}, Air Temp: {two
 
 print('One day ago:')
 print(f"Date: {one_day_ago_date_in_past_two_days_air_temp_file}, Air Temp: {one_day_ago_air_temp_in_past_two_days_air_temp_file}")
+
+# Read the forecasted air temp file
+with open('forecasted_air_temp.txt', 'r') as file:
+    forecasted_air_temp = file.read()
+    # print('forecasted air temp ', forecasted_air_temp)
 
 
 
