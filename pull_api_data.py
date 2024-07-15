@@ -103,9 +103,16 @@ def parse_weather_data(data):
 
         # Calculate and print daily averages
         for date, data in daily_data.items():
-            avg_temperature = sum(data["temperatures"]) / len(data["temperatures"])
+            # avg_temperature = sum(data["temperatures"]) / len(data["temperatures"])
+            avg_temperature = ( max(data["temperatures"]) + min(data["temperatures"]) ) / 2 
+
             avg_humidity = sum(data["humidities"]) / len(data["humidities"])
             print(f"Date: {date}, Average Temperature: {avg_temperature:.2f}°F")
+
+            if len(data["temperatures"]) < 18:
+                print('not enough data for this day, it will not be appended to average_temp_list ', date)
+                continue
+
             # save the date also to a list
             date_list.append(date)
             average_temp_list.append(avg_temperature)
@@ -148,10 +155,23 @@ print(f"Date: {two_days_ago_date_in_past_two_days_air_temp_file}, Air Temp: {two
 print('One day ago:')
 print(f"Date: {one_day_ago_date_in_past_two_days_air_temp_file}, Air Temp: {one_day_ago_air_temp_in_past_two_days_air_temp_file}")
 
+current_date = datetime.now().date() 
+
+if current_date >= (one_day_ago_date_in_past_two_days_air_temp_file + timedelta(days=1)) :
+    print('New day, updating past two days air temp file')
+    # Write the new data to the file
+    with open('past_two_days_air_temp.txt', 'w') as file:
+        file.write(f"{one_day_ago_date_in_past_two_days_air_temp_file},{one_day_ago_air_temp_in_past_two_days_air_temp_file}\n")
+        file.write(f"{current_date},{forecasted_air_temp}\n")
+
+
+
 # Read the forecasted air temp file
 with open('forecasted_air_temp.txt', 'r') as file:
     forecasted_air_temp = file.read()
-    # print('forecasted air temp ', forecasted_air_temp)
+    print('forecasted air temp ', forecasted_air_temp)
+
+
 
 
 

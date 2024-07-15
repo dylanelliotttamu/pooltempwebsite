@@ -92,11 +92,13 @@ def parse_weather_data(data):
             daily_data[date]["temperatures"].append(temperature)
             # daily_data[date]["humidities"].append(humidity)
 
-        # store the average temperature and humidity I calculated for each day
+        
         global average_temp_list
         # global average_humidity_list
         global date_list
-
+        global average_temp_list_rounded
+        
+        # store the average temperature and humidity I calculated for each day
         date_list = []
         average_temp_list = []
         # average_humidity_list = []
@@ -110,7 +112,11 @@ def parse_weather_data(data):
             avg_temperature = ( max(data["temperatures"]) + min(data["temperatures"]) ) / 2
             print('max temp ', max(data["temperatures"]))
             print('min temp ', min(data["temperatures"]))
-                  
+        
+            if len(data["temperatures"]) < 18:
+                print('not enough data for this day, it will not be appended to average_temp_list ', date)
+                continue
+            
 
             # avg_humidity = sum(data["humidities"]) / len(data["humidities"])
             print(f"Date: {date}, Average Temperature: {avg_temperature:.2f}°F")
@@ -131,6 +137,10 @@ def parse_weather_data(data):
 
 pull_api_temp_data_main(lat, lon,1)
 
+# write forecasted air temp file 
+with open('forecasted_air_temp.txt', 'w') as file:
+    for i in range(len(date_list)):
+        file.write(f"{date_list[i]},{average_temp_list_rounded[i]}\n")
 
 
 
