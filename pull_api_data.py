@@ -107,10 +107,10 @@ def parse_weather_data(data):
             avg_temperature = ( max(data["temperatures"]) + min(data["temperatures"]) ) / 2 
 
             avg_humidity = sum(data["humidities"]) / len(data["humidities"])
-            print(f"Date: {date}, Average Temperature: {avg_temperature:.2f}°F")
+            # print(f"Date: {date}, Average Temperature: {avg_temperature:.2f}°F")
 
             if len(data["temperatures"]) < 18:
-                print('not enough data for this day, it will not be appended to average_temp_list ', date)
+                # print('not enough data for this day, it will not be appended to average_temp_list ', date)
                 continue
 
             # save the date also to a list
@@ -146,7 +146,7 @@ Begin main part of script and call functions
 # Read the file
 with open('past_two_days_air_temp.txt', 'r') as file:
     lines = file.readlines()
-    print('lines ',lines)
+    # print('lines ',lines)
 
 # Parse the data
 one_day_ago_date_in_past_two_days_air_temp_file, one_day_ago_air_temp_in_past_two_days_air_temp_file = lines[0].strip().split(',')
@@ -247,5 +247,3 @@ print('Ran without error')
 # If there is an error, then the website will show persistence 
 
 # done backend
-
-
