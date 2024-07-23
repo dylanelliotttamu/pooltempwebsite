@@ -35,9 +35,19 @@ def retrieve_the_hourly_url_given_only_lat_and_lon(input_lat,input_lon):
     
     return hourly_forecast_url
 
+# Use url and return data 
+def request_data(url):
+    try:
+        with urllib.request.urlopen(url) as response: #url:
+            #data = json.loads(url.read().decode())
+            global data
+            data = json.loads(response.read().decode())
+            return data 
+            # returns 7-days of hourly data
+    except Exception as e:
+        print(f"Error requesting data: {e}")
 
-
-#frequency this script is ran will be determined by another script that will call this one
+# frequency this script is ran will be determined by another script that will call this one
 
 # Main function to pull data from NWS api
 def pull_api_temp_data_main(lat, lon,timestep_in_hours):
@@ -60,20 +70,6 @@ def pull_api_temp_data_main(lat, lon,timestep_in_hours):
     except KeyError as e:
         print(f"KeyError: {e}")
         print('Error pulling data from NWS api')
-    
-
-# Use url and return data 
-def request_data(url):
-    try:
-        with urllib.request.urlopen(url) as response: #url:
-            #data = json.loads(url.read().decode())
-            global data
-            data = json.loads(response.read().decode())
-            return data 
-            # returns 7-days of hourly data
-    except Exception as e:
-        print(f"Error requesting data: {e}")
-
 
 def parse_weather_data(data):
     try:  
@@ -113,9 +109,9 @@ def parse_weather_data(data):
             avg_humidity = sum(data["humidities"]) / len(data["humidities"])
             print(f"Date: {date}, Average Temperature: {avg_temperature:.2f}°F")
 
-            # if len(data["temperatures"]) < 18:
-            #     print('not enough data for this day, it will not be appended to average_temp_list ', date)
-            #     continue
+            if len(data["temperatures"]) < 18:
+                print('not enough data for this day, it will not be appended to average_temp_list ', date)
+                continue
 
             # save the date also to a list
             date_list.append(date)
@@ -125,8 +121,9 @@ def parse_weather_data(data):
         average_temp_list_rounded = [round(i,2) for i in average_temp_list]
         average_humidity_list_rounded = [round(i,2) for i in average_humidity_list]
         # print('average humidity list rounded ', average_humidity_list_rounded)
-        print('average temp list rounded ', average_temp_list_rounded)
-        print('date list ', date_list)
+        # print('average temp list rounded ', average_temp_list_rounded)
+        
+        # print('date list ', date_list)
 
     except Exception as e:
         print(f"Error parsing data: {e}")
@@ -138,14 +135,11 @@ Begin main part of script and call functions
 
 '''
 
-
-
 # Process:
 # If new day: 
 # Read in past2days air temp file and replace date and associated temp of 1day ago to 2 day ago
 # Read in forecasted air temp file and take the 1st entry and replace with 1 day ago
-# Then run the rest of the script
-
+# Pull api data and calculate forecasted pool temps and write to forecasted pool temps file
 
 ################### STEP 1: Get last two days of air temperature data ###################
 
@@ -158,13 +152,13 @@ with open('past_two_days_air_temp.txt', 'r') as file:
 one_day_ago_date_in_past_two_days_air_temp_file, one_day_ago_air_temp_in_past_two_days_air_temp_file = lines[0].strip().split(',')
 two_days_ago_date_in_past_two_days_air_temp_file, two_days_ago_air_temp_in_past_two_days_air_temp_file = lines[1].strip().split(',')
 
-print('One day ago:')
-print(f"Date: {one_day_ago_date_in_past_two_days_air_temp_file}, Air Temp: {one_day_ago_air_temp_in_past_two_days_air_temp_file}")
+# print('One day ago:')
+# print(f"Date: {one_day_ago_date_in_past_two_days_air_temp_file}, Air Temp: {one_day_ago_air_temp_in_past_two_days_air_temp_file}")
 # make one_day_ago_air_temp_in_past_two_days_air_temp_file a float
 one_day_ago_air_temp_in_past_two_days_air_temp_file = float(one_day_ago_air_temp_in_past_two_days_air_temp_file)
 
-print('Two days ago:')
-print(f"Date: {two_days_ago_date_in_past_two_days_air_temp_file}, Air Temp: {two_days_ago_air_temp_in_past_two_days_air_temp_file}")
+# print('Two days ago:')
+# print(f"Date: {two_days_ago_date_in_past_two_days_air_temp_file}, Air Temp: {two_days_ago_air_temp_in_past_two_days_air_temp_file}")
 # make two_day_ago_air_temp_in_past_two_days_air_temp_file a float
 two_days_ago_air_temp_in_past_two_days_air_temp_file = float(two_days_ago_air_temp_in_past_two_days_air_temp_file)
 
@@ -186,14 +180,15 @@ pull_api_temp_data_main(lat, lon, 1)
 #     forecasted_temp = (average_temp_list[i] + average_temp_list[i-1]) / 2
 #     forecasted_temps.append(forecasted_temp)
 
-# No list
+# No need for a list right now
 forecasted_1daysinfuture_pool_temp = ( average_temp_list[0] + one_day_ago_air_temp_in_past_two_days_air_temp_file ) / 2 
 forecasted_2daysinfuture_pool_temp = ( average_temp_list[1] + average_temp_list[0] ) / 2
 forecasted_3daysinfuture_pool_temp = ( average_temp_list[2] + average_temp_list[1] ) / 2
 forecasted_4daysinfuture_pool_temp = ( average_temp_list[3] + average_temp_list[2] ) / 2
 forecasted_5daysinfuture_pool_temp = ( average_temp_list[4] + average_temp_list[3] ) / 2
 forecasted_6daysinfuture_pool_temp = ( average_temp_list[5] + average_temp_list[4] ) / 2
-forecasted_7daysinfuture_pool_temp = ( average_temp_list[6] + average_temp_list[5] ) / 2
+if len(date_list) > 6:
+    forecasted_7daysinfuture_pool_temp = ( average_temp_list[6] + average_temp_list[5] ) / 2
 
 ################### STEP 2 DONE  ###################
 # STEP 3: while still have 1 day ago data, and now i have today's air temp, overwrite two days ago
@@ -209,15 +204,16 @@ one_day_after = one_day_ago_date + timedelta(days=1)
 if current_date >= one_day_after:
 # if current_date >= (one_day_ago_date_in_past_two_days_air_temp_file + timedelta(days=1)) : # should always be true, but just in case
     # later I could add if its greater than two days, go retrieve the historical data from two days ago
-    print('New day, updating past two days air temp file')
+    # print('New day, updating past two days air temp file')
     # Write the new data to the file
     with open('past_two_days_air_temp.txt', 'w') as file:
         file.write(f"{current_date},{average_temp_list[0]}\n") # today's air temp moved to file, SHOULD BE AVERAGE_TEMP_LIST[0]
         file.write(f"{one_day_ago_date_in_past_two_days_air_temp_file},{one_day_ago_air_temp_in_past_two_days_air_temp_file}\n") 
         # yesterday's air temp moved to become two days ago
-else: 
-    print('Not a new day, not updating past two days air temp file')
-    raise ValueError('Not a new day, not updating past two days air temp file')
+# else: 
+    # print('Not a new day, not updating past two days air temp file')
+    
+    # raise ValueError('Not a new day, not updating past two days air temp file')
 
 ################### STEP 3 DONE  ###################
 # STEP4: Write the forecasted air temp data to a text file to save if I put air temps on the website later
@@ -237,13 +233,18 @@ with open('forecasted_pool_temps.txt', 'w') as file:
     file.write(f"{date_list[3]},{forecasted_3daysinfuture_pool_temp}\n")
     file.write(f"{date_list[4]},{forecasted_4daysinfuture_pool_temp}\n")
     file.write(f"{date_list[5]},{forecasted_5daysinfuture_pool_temp}\n")
-    file.write(f"{date_list[6]},{forecasted_6daysinfuture_pool_temp}\n")
-    file.write(f"{date_list[7]},{forecasted_7daysinfuture_pool_temp}\n")
+    if len(date_list) > 6:
+        file.write(f"{date_list[6]},{forecasted_6daysinfuture_pool_temp}\n")
+    if len(date_list) > 7:
+        file.write(f"{date_list[7]},{forecasted_7daysinfuture_pool_temp}\n")
     # close the file
     file.close()
 
 ################### STEP 4 DONE  ###################
 
+print('Ran without error')
+
+# If there is an error, then the website will show persistence 
 
 # done backend
 
