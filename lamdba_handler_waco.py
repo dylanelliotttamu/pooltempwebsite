@@ -1,11 +1,32 @@
 # lambda handler file for Waco Wave Pool Temperature Forecast
 
 
-# Read in the data from the text file
-with open('data.txt', 'r') as file:
-    data = file.read()
+# Read in past two days air temp file
+import numpy as np
+from datetime import datetime, timedelta
+# Read the file
+with open('past_two_days_air_temp.txt', 'r') as file:
+    lines = file.readlines()
+    # print('lines ',lines)
 
-print(data)
+# Parse the data
+one_day_ago_date_in_past_two_days_air_temp_file, one_day_ago_air_temp_in_past_two_days_air_temp_file = lines[0].strip().split(',')
+two_days_ago_date_in_past_two_days_air_temp_file, two_days_ago_air_temp_in_past_two_days_air_temp_file = lines[1].strip().split(',')
+
+# print('One day ago:')
+# print(f"Date: {one_day_ago_date_in_past_two_days_air_temp_file}, Air Temp: {one_day_ago_air_temp_in_past_two_days_air_temp_file}")
+# make one_day_ago_air_temp_in_past_two_days_air_temp_file a float
+one_day_ago_air_temp_in_past_two_days_air_temp_file = float(one_day_ago_air_temp_in_past_two_days_air_temp_file)
+
+# print('Two days ago:')
+# print(f"Date: {two_days_ago_date_in_past_two_days_air_temp_file}, Air Temp: {two_days_ago_air_temp_in_past_two_days_air_temp_file}")
+# make two_day_ago_air_temp_in_past_two_days_air_temp_file a float
+two_days_ago_air_temp_in_past_two_days_air_temp_file = float(two_days_ago_air_temp_in_past_two_days_air_temp_file)
+
+
+current_date = datetime.now().date() 
+
+today_pool_temp = np.average([two_days_ago_air_temp_in_past_two_days_air_temp_file, one_day_ago_air_temp_in_past_two_days_air_temp_file])
 
 
 def lambda_handler(event, context):
@@ -33,7 +54,7 @@ def lambda_handler(event, context):
             <li>Thursday: 79°F, sunny</li>
             <li>Friday: 81°F, partly cloudy</li>
             <li>Saturday: 83°F, sunny</li>
-            <li>Sunday: {data}°F, sunny</li>
+            <li>Sunday: {today_pool_temp}°F, sunny</li>
         </ul>
         
         <img src="https://example.com/waco-wave-pool.jpg" alt="Waco Wave Pool" width="500" />
